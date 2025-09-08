@@ -4,7 +4,7 @@
 # We will create a todo/serializers.py file:
 
 from rest_framework import serializers
-from .models import Todo, User
+from .models import Todo, CustomUser
 
 #  Specify the model to work with and the fields we want to be converted to JSON.
 class TodoSerializer(serializers.ModelSerializer):
@@ -15,9 +15,9 @@ class TodoSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     """
-    Serializer for User model with full CRUD operations support.
+    Serializer for CustomUser model with full CRUD operations support.
     
-    Handles serialization and deserialization of User instances for API endpoints.
+    Handles serialization and deserialization of CustomUser instances for API endpoints.
     Includes validation for email uniqueness and username requirements.
     """
     password = serializers.CharField(write_only=True, required=False)
@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = (
             'id', 'username', 'email', 'first_name', 'last_name', 
             'is_active', 'date_joined', 'last_login', 'profile_picture', 
@@ -52,9 +52,9 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         """Validate email uniqueness on update."""
         if self.instance and self.instance.email != value:
-            if User.objects.filter(email=value).exists():
+            if CustomUser.objects.filter(email=value).exists():
                 raise serializers.ValidationError("A user with this email already exists.")
-        elif not self.instance and User.objects.filter(email=value).exists():
+        elif not self.instance and CustomUser.objects.filter(email=value).exists():
             raise serializers.ValidationError("A user with this email already exists.")
         return value
 
@@ -77,7 +77,7 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password', None)
         password = validated_data.pop('password', None)
         
-        user = User.objects.create(**validated_data)
+        user = CustomUser.objects.create(**validated_data)
         
         # Note: In a real application, you might want to hash the password
         # For this example, we're storing it as plain text (not recommended for production)
@@ -112,7 +112,7 @@ class UserListSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('id', 'username', 'email', 'full_name', 'is_active', 'date_joined')
 
     def get_full_name(self, obj):

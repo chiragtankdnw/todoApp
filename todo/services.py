@@ -10,20 +10,20 @@ from django.db import transaction
 from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from .models import User
+from .models import CustomUser
 from typing import List, Dict, Optional, Any
 
 
 class UserService:
     """
-    Service class for User-related business operations.
+    Service class for CustomUser-related business operations.
     
     This service handles all business logic related to user management,
     including CRUD operations, validation, and complex queries.
     """
 
     @staticmethod
-    def get_all_users(active_only: bool = True) -> List[User]:
+    def get_all_users(active_only: bool = True) -> List[CustomUser]:
         """
         Retrieve all users from the database.
         
@@ -31,15 +31,15 @@ class UserService:
             active_only (bool): If True, return only active users. Defaults to True.
             
         Returns:
-            List[User]: List of User instances
+            List[CustomUser]: List of CustomUser instances
         """
-        queryset = User.objects.all()
+        queryset = CustomUser.objects.all()
         if active_only:
             queryset = queryset.filter(is_active=True)
         return queryset.order_by('-date_joined')
 
     @staticmethod
-    def get_user_by_id(user_id: int) -> Optional[User]:
+    def get_user_by_id(user_id: int) -> Optional[CustomUser]:
         """
         Retrieve a user by their ID.
         
@@ -47,15 +47,15 @@ class UserService:
             user_id (int): The ID of the user to retrieve
             
         Returns:
-            Optional[User]: User instance if found, None otherwise
+            Optional[CustomUser]: CustomUser instance if found, None otherwise
         """
         try:
-            return User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            return CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
             return None
 
     @staticmethod
-    def get_user_by_username(username: str) -> Optional[User]:
+    def get_user_by_username(username: str) -> Optional[CustomUser]:
         """
         Retrieve a user by their username.
         
@@ -63,15 +63,15 @@ class UserService:
             username (str): The username to search for
             
         Returns:
-            Optional[User]: User instance if found, None otherwise
+            Optional[CustomUser]: CustomUser instance if found, None otherwise
         """
         try:
-            return User.objects.get(username=username)
-        except User.DoesNotExist:
+            return CustomUser.objects.get(username=username)
+        except CustomUser.DoesNotExist:
             return None
 
     @staticmethod
-    def get_user_by_email(email: str) -> Optional[User]:
+    def get_user_by_email(email: str) -> Optional[CustomUser]:
         """
         Retrieve a user by their email address.
         
@@ -79,16 +79,16 @@ class UserService:
             email (str): The email address to search for
             
         Returns:
-            Optional[User]: User instance if found, None otherwise
+            Optional[CustomUser]: CustomUser instance if found, None otherwise
         """
         try:
-            return User.objects.get(email=email)
-        except User.DoesNotExist:
+            return CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
             return None
 
     @staticmethod
     @transaction.atomic
-    def create_user(user_data: Dict[str, Any]) -> User:
+    def create_user(user_data: Dict[str, Any]) -> CustomUser:
         """
         Create a new user with the provided data.
         
@@ -96,7 +96,7 @@ class UserService:
             user_data (Dict[str, Any]): Dictionary containing user information
             
         Returns:
-            User: The created User instance
+            CustomUser: The created CustomUser instance
             
         Raises:
             ValidationError: If user data is invalid
@@ -108,11 +108,11 @@ class UserService:
                 raise ValidationError(f"{field} is required")
 
         # Check if username already exists
-        if User.objects.filter(username=user_data['username']).exists():
+        if CustomUser.objects.filter(username=user_data['username']).exists():
             raise ValidationError("Username already exists")
 
         # Check if email already exists
-        if User.objects.filter(email=user_data['email']).exists():
+        if CustomUser.objects.filter(email=user_data['email']).exists():
             raise ValidationError("Email already exists")
 
         # Remove fields that are not part of the User model
@@ -121,12 +121,12 @@ class UserService:
         clean_data.pop('confirm_password', None)
 
         # Create the user
-        user = User.objects.create(**clean_data)
+        user = CustomUser.objects.create(**clean_data)
         return user
 
     @staticmethod
     @transaction.atomic
-    def update_user(user_id: int, user_data: Dict[str, Any]) -> Optional[User]:
+    def update_user(user_id: int, user_data: Dict[str, Any]) -> Optional[CustomUser]:
         """
         Update an existing user with the provided data.
         
@@ -135,7 +135,7 @@ class UserService:
             user_data (Dict[str, Any]): Dictionary containing updated user information
             
         Returns:
-            Optional[User]: The updated User instance if found, None otherwise
+            Optional[CustomUser]: The updated CustomUser instance if found, None otherwise
             
         Raises:
             ValidationError: If user data is invalid
@@ -146,12 +146,12 @@ class UserService:
 
         # Check username uniqueness if being updated
         if 'username' in user_data and user_data['username'] != user.username:
-            if User.objects.filter(username=user_data['username']).exists():
+            if CustomUser.objects.filter(username=user_data['username']).exists():
                 raise ValidationError("Username already exists")
 
         # Check email uniqueness if being updated
         if 'email' in user_data and user_data['email'] != user.email:
-            if User.objects.filter(email=user_data['email']).exists():
+            if CustomUser.objects.filter(email=user_data['email']).exists():
                 raise ValidationError("Email already exists")
 
         # Remove fields that are not part of the User model
@@ -188,7 +188,7 @@ class UserService:
 
     @staticmethod
     @transaction.atomic
-    def deactivate_user(user_id: int) -> Optional[User]:
+    def deactivate_user(user_id: int) -> Optional[CustomUser]:
         """
         Deactivate a user instead of deleting them.
         
@@ -196,7 +196,7 @@ class UserService:
             user_id (int): The ID of the user to deactivate
             
         Returns:
-            Optional[User]: The deactivated User instance if found, None otherwise
+            Optional[CustomUser]: The deactivated CustomUser instance if found, None otherwise
         """
         user = UserService.get_user_by_id(user_id)
         if not user:
@@ -208,7 +208,7 @@ class UserService:
 
     @staticmethod
     @transaction.atomic
-    def activate_user(user_id: int) -> Optional[User]:
+    def activate_user(user_id: int) -> Optional[CustomUser]:
         """
         Activate a deactivated user.
         
@@ -216,7 +216,7 @@ class UserService:
             user_id (int): The ID of the user to activate
             
         Returns:
-            Optional[User]: The activated User instance if found, None otherwise
+            Optional[CustomUser]: The activated CustomUser instance if found, None otherwise
         """
         user = UserService.get_user_by_id(user_id)
         if not user:
@@ -227,7 +227,7 @@ class UserService:
         return user
 
     @staticmethod
-    def search_users(query: str) -> List[User]:
+    def search_users(query: str) -> List[CustomUser]:
         """
         Search for users by username, email, first name, or last name.
         
@@ -235,9 +235,9 @@ class UserService:
             query (str): The search query
             
         Returns:
-            List[User]: List of matching User instances
+            List[CustomUser]: List of matching CustomUser instances
         """
-        return User.objects.filter(
+        return CustomUser.objects.filter(
             Q(username__icontains=query) |
             Q(email__icontains=query) |
             Q(first_name__icontains=query) |
@@ -252,8 +252,8 @@ class UserService:
         Returns:
             Dict[str, int]: Dictionary containing user statistics
         """
-        total_users = User.objects.count()
-        active_users = User.objects.filter(is_active=True).count()
+        total_users = CustomUser.objects.count()
+        active_users = CustomUser.objects.filter(is_active=True).count()
         inactive_users = total_users - active_users
         
         return {
@@ -264,7 +264,7 @@ class UserService:
 
     @staticmethod
     @transaction.atomic
-    def update_last_login(user_id: int) -> Optional[User]:
+    def update_last_login(user_id: int) -> Optional[CustomUser]:
         """
         Update the last login timestamp for a user.
         
@@ -272,7 +272,7 @@ class UserService:
             user_id (int): The ID of the user
             
         Returns:
-            Optional[User]: The updated User instance if found, None otherwise
+            Optional[CustomUser]: The updated CustomUser instance if found, None otherwise
         """
         user = UserService.get_user_by_id(user_id)
         if not user:

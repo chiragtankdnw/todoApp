@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.core.exceptions import ValidationError
 from .serializers import TodoSerializer, UserSerializer, UserListSerializer
-from .models import Todo, User
+from .models import Todo, CustomUser
 from .services import UserService
 from django.views import View
 from django.http import HttpResponse, HttpResponseNotFound
@@ -46,7 +46,7 @@ class UserController(viewsets.ModelViewSet):
     - GET /api/users/statistics/ - Get user statistics
     """
     
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
     def get_serializer_class(self):

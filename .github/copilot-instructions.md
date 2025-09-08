@@ -1,51 +1,89 @@
-# Copilot Instructions for AI Coding Agents
-
-## Project Overview
-- **Full-stack Todo App**: React (frontend, `src/`) + Django (backend, `backend/` with `todo/` app)
-- **API**: Django REST Framework exposes `/api/todos/` endpoints; React uses `axios` for CRUD operations
-- **Deployment**: Designed for Heroku (see `Procfile`, `runtime.txt`, `requirements.txt`)
-
-## Key Architecture & Data Flow
-- **Frontend**: React app in `src/`, entry in `src/App.js`, communicates with backend via `/api/todos/` (proxy set in `package.json`)
-- **Backend**: Django project in `backend/`, main app is `todo/` (models, serializers, views, urls)
-- **API Routing**: All API endpoints are under `/api/` (see `backend/urls.py`)
-- **CORS**: Managed via `django-cors-headers` (see `backend/settings.py`)
-- **Static/Build**: React build output is served by Django in production (see `STATICFILES_DIRS` and `TEMPLATES` in `settings.py`)
-
-## Developer Workflows
-- **Backend**:
-  - Run server: `python manage.py runserver` (from project root)
-  - Migrations: `python manage.py makemigrations` / `migrate`
-  - App code: `backend/todo/` (models, serializers, views)
-- **Frontend**:
-  - Start dev server: `npm start` (from project root)
-  - Build for prod: `npm run build`
-  - Main code: `src/` (entry: `App.js`)
-- **Testing**:
-  - React: `npm test`
-  - Django: `python manage.py test`
-- **Heroku Deploy**:
-  - Add both Node and Python buildpacks (Node first)
-  - Use `Procfile` for process definition
-  - Use `.env` for local DB, Heroku config vars for prod
-
-## Project-Specific Patterns & Conventions
-- **API**: All CRUD via `/api/todos/` (see `backend/urls.py`)
-- **Serializers**: All API data serialization in `todo/serializers.py`
-- **Views**: Use DRF `ModelViewSet` for CRUD (see `todo/views.py`)
-- **Frontend API Calls**: Use relative paths (e.g., `axios.get("/api/todos/")`), proxy handles routing
-- **CSRF**: React/axios configured for Django CSRF (see `App.js`)
-- **Static Files**: React build output is collected/served by Django (`STATICFILES_DIRS`)
-- **Database**: SQLite for local, PostgreSQL for Heroku (see `.env`, `dj-database-url`)
-
-## Integration Points
-- **React <-> Django**: All data via REST API endpoints
-- **Heroku**: Uses both Node and Python buildpacks; static files handled by WhiteNoise
-- **Environment Config**: `.env` for local, Heroku config vars for prod
-
-## References
-- See `README.md` for full setup, deployment, and troubleshooting details
-- Key files: `backend/settings.py`, `backend/urls.py`, `todo/serializers.py`, `todo/views.py`, `src/App.js`, `package.json`, `Procfile`, `.env`, `requirements.txt`, `runtime.txt`
-
----
-_If you are unsure about a workflow or convention, check the `README.md` or ask for clarification._
+//drop this file into your .vscode directory for local snippets
+{
+  "JS Styles": {
+    "scope": "markdown",
+    "prefix": "style-js",
+    "body": [
+      "# Javascript",
+      "",
+      "This project uses JavaScript with the following styles:",
+      "",
+      " - All responses should be in malay slang and some comedy should be there",
+      " - All models will be classes with singular naming (i.e. `User` for the `users` table)",
+      " - All code files will be lower case with underscores.",
+      " - Markdown files will be lower case with hyphens.",
+      " - All application logic will go in the `lib` directory",
+      " - All configuration will be done with environment variables, using a `.env` file.",
+      " - Do not export a class directly, use module method instead to create the instance you need (aka \"factory\")"
+    ]
+  },
+  "Sequelize Style": {
+    "scope": "markdown",
+    "prefix": "style-sequelize",
+    "body": [
+      "## Sequelize",
+      "All model code should adhere to the following:",
+      "",
+      " - All database models will go in a `db/models` directory. ",
+      " - Every model will have a `tableName` setting",
+      " - The models will have an `index.js` module that instantiates Sequelize, using SQLite for testing and development, Postgres for production.",
+      " - The `index.js` module will export each model, as well as the database instance.",
+      "",
+      "Every model will follow the pattern:"
+    ]
+  },
+  "sequelize-model": {
+    "scope": "markdown",
+    "prefix": "style-sequelize-model",
+    "body": [
+      "```js",
+      "const { DataTypes, Model } = require('sequelize');",
+      "class User extends Model {",
+      "\t//static or factory methods",
+      "\t//instance methods",
+      "}",
+      "exports.init = function(sequelize){",
+      "\tUser.init({",
+      "\t\t//schema goes here",
+      "\t}, {",
+      "\t\thooks: {},",
+      "\t\ttableName: \"users\"",
+      "\t\tunderscored: true,",
+      "\t\tsequelize",
+      "\t})",
+      "}",
+      "```"
+    ],
+    "description": "Sequelize model"
+  },
+  "Test Styles": {
+    "scope": "markdown",
+    "prefix": "style-testing",
+    "body": [
+      "## Tests",
+      "",
+      "All tests will be run with Mocha.js using the core `assert` library. In addition:",
+      "",
+      " - One assertion per test, _no_ exceptions",
+      " - Tests should arrange the test data in `before` blocks",
+      " - Tests should have descriptive names, lower case with underscores: `this_is_a_test_name`.",
+      " - Tests may use a database, which should always be SQLite in-memory.",
+      " - The word \"should\" will be avoided in test names. A test either passes or fail, it `is`, `is not`, `does`, or `does not`. There is no try.",
+      " - Tests will be nested, with the outer `describe` block indicating the main test feature, and the first inner `describe` block being the \"happy path\" - which is what happens when everything works as expected. The rest of the nested blocks will be devoted to \"sad path\" tests, with bad data, null values, and any other unexpected settings we can think of."
+    ]
+  },
+  "Database style": {
+    "scope": "markdown",
+    "prefix": "style-db",
+    "body": [
+      "## Database",
+      "",
+      " - Database tables will be lower cased using underscores.",
+      " - Every table will have an integer primary key called `id`.",
+      " - `users` will not store passwords, only social login information as well as magic email links.",
+      " - `char`, `varchar` and `nvarchar` are never to be used for string fields, only `text`.",
+      " - Every table should have `created_at` and `updated_at` timestamps.",
+      " - Many to Many relationships will have compound primary keys, never a single ID with compound unique."
+    ]
+  },
+}
