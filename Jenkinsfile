@@ -35,7 +35,8 @@ pipeline {
 
     post {
         always {
-            junit '**/TEST-*.xml' allowEmptyResults: true
+            // Corrected syntax
+            junit(testResults: '**/TEST-*.xml', allowEmptyResults: true)
         }
     }
 }
