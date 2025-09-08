@@ -6,16 +6,4 @@ class TodoConfig(AppConfig):
 
 
 
-# #docstringcustom prompt
-# def multiply(a, b):
-#     """
-#     Multiply two numbers.
-
-#     Args:
-#         a (int): The first number.
-#         b (int): The second number.
-
-#     Returns:
-#         int: The product of a and b.
-#     """
-#     return a * b
+# Utility functions should be placed in a separate module such as utils.py
