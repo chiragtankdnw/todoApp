@@ -12,13 +12,45 @@ code {
 		monospace;
 } */
 
+/* Theme Variables */
+:root {
+	--color-bg: #ffffff;
+	--color-bg-alt: #f5f7fa;
+	--color-text: #1a1d21;
+	--color-border: #d0d7de;
+	--color-accent: #0d6efd;
+	--color-danger: #dc3545;
+	--color-card-bg: #ffffff;
+	--color-tab-active-bg: #0d6efd;
+	--color-tab-active-text: #ffffff;
+	--color-tab-border: #0d6efd;
+}
+
+body.theme-dark {
+	--color-bg: #0f1115;
+	--color-bg-alt: #161a20;
+	--color-text: #e6e9ed;
+	--color-border: #2a313b;
+	--color-accent: #4dabf7;
+	--color-danger: #f87171;
+	--color-card-bg: #1b2026;
+	--color-tab-active-bg: #4dabf7;
+	--color-tab-active-text: #0f1115;
+	--color-tab-border: #4dabf7;
+}
+
+/* Light theme uses default :root variables */
+
 body {
 	margin: 0;
 	padding: 0;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background-color: #282c34;
+	background: var(--color-bg);
+	color: var(--color-text);
+	transition: background-color 0.3s ease, color 0.3s ease;
+	min-height: 100vh;
 }
 
 .todo-title {
@@ -31,13 +63,42 @@ body {
 
 .tab-list>span {
 	padding: 5px 8px;
-	border: 1px solid #282c34;
+	border: 1px solid var(--color-tab-border);
 	border-radius: 10px;
 	margin-right: 5px;
 	cursor: pointer;
+	transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+	user-select: none;
 }
 
 .tab-list>span.active {
-	background-color: #282c34;
-	color: #ffffff;
+	background-color: var(--color-tab-active-bg);
+	color: var(--color-tab-active-text);
+}
+
+.card {
+	background: var(--color-card-bg);
+	border: 1px solid var(--color-border);
+	transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.list-group-item {
+	background: var(--color-card-bg);
+	color: var(--color-text);
+	border-color: var(--color-border);
+	transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.btn-primary {
+	background-color: var(--color-accent);
+	border-color: var(--color-accent);
+}
+
+body.theme-dark .btn-outline-secondary {
+	color: var(--color-tab-active-text);
+	border-color: var(--color-border);
+}
+
+body.theme-dark .btn-outline-secondary:hover {
+	background: var(--color-border);
 }

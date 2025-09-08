@@ -15,13 +15,36 @@ class App extends Component {
 				description: "",
 				completed: false
 			},
-			todoList: []
+								todoList: [],
+				isDarkMode: false
 		};
 	}
 
 	componentDidMount() {
-		this.refreshList();
+			this.refreshList();
+			// Initialize theme from localStorage or system preference
+			const storedTheme = localStorage.getItem('theme');
+			let isDark = false;
+			if (storedTheme === 'dark') {
+				isDark = true;
+			} else if (storedTheme === 'light') {
+				isDark = false;
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				isDark = true;
+			}
+			this.setState({ isDarkMode: isDark }, this.applyTheme);
 	}
+
+		applyTheme = () => {
+			const { isDarkMode } = this.state;
+			document.body.classList.toggle('theme-dark', isDarkMode);
+			document.body.classList.toggle('theme-light', !isDarkMode);
+			localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+		};
+
+		toggleTheme = () => {
+			this.setState(prev => ({ isDarkMode: !prev.isDarkMode }), this.applyTheme);
+		};
 
 	refreshList = () => {
 		axios
@@ -138,10 +161,17 @@ class App extends Component {
 				<div className="row ">
 					<div className="col-md-6 col-sm-10 mx-auto p-0">
 						<div className="card p-3">
-							<div className="">
-								<button onClick={this.createItem} className="btn btn-primary">
+							<div className="d-flex align-items-center mb-2">
+								<button onClick={this.createItem} className="btn btn-primary mr-2">
 									Add task
-                    </button>
+								</button>
+								<button
+									onClick={this.toggleTheme}
+									className="btn btn-outline-secondary"
+									aria-label="Toggle dark mode"
+								>
+									{this.state.isDarkMode ? 'Light Mode' : 'Dark Mode'}
+								</button>
 							</div>
 							{this.renderTabList()}
 							<ul className="list-group list-group-flush">
