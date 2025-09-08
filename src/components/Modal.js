@@ -8,27 +8,50 @@ import {
 	Form,
 	FormGroup,
 	Input,
-	Label
+	Label,
+	FormFeedback
 } from "reactstrap";
 
 export default class CustomModal extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activeItem: this.props.activeItem
+			activeItem: this.props.activeItem,
+			dateError: ""
 		};
 	}
+	
 	handleChange = e => {
 		let { name, value } = e.target;
 		if (e.target.type === "checkbox") {
 			value = e.target.checked;
 		}
 		const activeItem = { ...this.state.activeItem, [name]: value };
-		this.setState({ activeItem });
+		this.setState({ 
+			activeItem,
+			dateError: "" // Clear any previous date error when user makes changes
+		});
+	};
+	
+	validateDates = () => {
+		const { start_date, end_date } = this.state.activeItem;
+		if (start_date && end_date && new Date(end_date) < new Date(start_date)) {
+			this.setState({ dateError: "End date cannot be before start date." });
+			return false;
+		}
+		return true;
+	};
+	
+	handleSave = () => {
+		if (this.validateDates()) {
+			this.props.onSave(this.state.activeItem);
+		}
 	};
 	
 	render() {
-		const { toggle, onSave } = this.props;
+		const { toggle } = this.props;
+		const { dateError } = this.state;
+		
 		return (
 			<Modal isOpen={true} toggle={toggle}>
 				<ModalHeader toggle={toggle}> Todo Item </ModalHeader>
@@ -54,6 +77,26 @@ export default class CustomModal extends Component {
 								placeholder="Enter Todo description"
 							/>
 						</FormGroup>
+						<FormGroup>
+							<Label for="start_date">Start Date</Label>
+							<Input
+								type="date"
+								name="start_date"
+								value={this.state.activeItem.start_date || ""}
+								onChange={this.handleChange}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label for="end_date">End Date</Label>
+							<Input
+								type="date"
+								name="end_date"
+								value={this.state.activeItem.end_date || ""}
+								onChange={this.handleChange}
+								invalid={!!dateError}
+							/>
+							{dateError && <FormFeedback>{dateError}</FormFeedback>}
+						</FormGroup>
 						<FormGroup check>
 							<Label for="completed">
 								<Input
@@ -68,7 +111,7 @@ export default class CustomModal extends Component {
 					</Form>
 				</ModalBody>
 				<ModalFooter>
-					<Button color="success" onClick={() => onSave(this.state.activeItem)}>
+					<Button color="success" onClick={this.handleSave}>
 						Save
               		</Button>
 				</ModalFooter>

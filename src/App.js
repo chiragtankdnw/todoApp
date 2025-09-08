@@ -13,7 +13,9 @@ class App extends Component {
 			activeItem: {
 				title: "",
 				description: "",
-				completed: false
+				completed: false,
+				start_date: "",
+				end_date: ""
 			},
 								todoList: [],
 				isDarkMode: false
@@ -81,6 +83,16 @@ class App extends Component {
 		);
 	};
 	
+	formatDate = (dateString) => {
+		if (!dateString) return null;
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-US', { 
+			year: 'numeric', 
+			month: 'short', 
+			day: 'numeric' 
+		});
+	};
+	
 	renderItems = () => {
 		const { viewCompleted } = this.state;
 		const newItems = this.state.todoList.filter(
@@ -91,13 +103,30 @@ class App extends Component {
 				key={item.id}
 				className="list-group-item d-flex justify-content-between align-items-center"
 			>
-				<span
-					className={`todo-title mr-2 ${this.state.viewCompleted ? "completed-todo" : ""
-						}`}
-					title={item.description}
-				>
-					{item.title}
-				</span>
+				<div className="todo-content">
+					<span
+						className={`todo-title mr-2 ${this.state.viewCompleted ? "completed-todo" : ""
+							}`}
+						title={item.description}
+					>
+						{item.title}
+					</span>
+					{(item.start_date || item.end_date) && (
+						<div className="todo-dates text-muted small">
+							{item.start_date && (
+								<span className="start-date">
+									Start: {this.formatDate(item.start_date)}
+								</span>
+							)}
+							{item.start_date && item.end_date && " | "}
+							{item.end_date && (
+								<span className="end-date">
+									End: {this.formatDate(item.end_date)}
+								</span>
+							)}
+						</div>
+					)}
+				</div>
 				<span>
 					<button
 						onClick={() => this.editItem(item)}
@@ -122,18 +151,26 @@ class App extends Component {
 
 	handleSubmit = item => {
 		this.toggle();
+		
+		// Convert empty strings to null for date fields to match API expectations
+		const processedItem = {
+			...item,
+			start_date: item.start_date || null,
+			end_date: item.end_date || null
+		};
+		
 		if (item.id) {
 			axios
 				// Because of proxy in package.json, command be shorten as follows:
 				// .put(`http://localhost:8000/api/todos/${item.id}/`, item)
-				.put(`/api/todos/${item.id}/`, item)
+				.put(`/api/todos/${item.id}/`, processedItem)
 				.then(res => this.refreshList());
 			return;
 		}
 		axios
 			// Because of proxy in package.json, command be shorten as follows:
 			// .post("http://localhost:8000/api/todos/", item)
-			.post("/api/todos/", item)
+			.post("/api/todos/", processedItem)
 			.then(res => this.refreshList());
 	};
 
@@ -146,12 +183,18 @@ class App extends Component {
 	};
 
 	createItem = () => {
-		const item = { title: "", description: "", completed: false };
+		const item = { title: "", description: "", completed: false, start_date: "", end_date: "" };
 		this.setState({ activeItem: item, modal: !this.state.modal });
 	};
 
 	editItem = item => {
-		this.setState({ activeItem: item, modal: !this.state.modal });
+		// Convert null date values to empty strings for form display
+		const editableItem = {
+			...item,
+			start_date: item.start_date || "",
+			end_date: item.end_date || ""
+		};
+		this.setState({ activeItem: editableItem, modal: !this.state.modal });
 	};
 
 	render() {
