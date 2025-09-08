@@ -1,5 +1,60 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import EmailValidator
+from django.utils import timezone
 # Create your models here.
+
+
+class User(models.Model):
+    """
+    Custom User model for managing user accounts in the todo application.
+    
+    This model extends the basic user functionality with additional fields
+    for profile information and account management.
+    
+    Attributes:
+        username (CharField): Unique username for login. Maximum 150 characters.
+        email (EmailField): User's email address. Must be unique across all users.
+        first_name (CharField): User's first name. Maximum 30 characters.
+        last_name (CharField): User's last name. Maximum 30 characters.
+        is_active (BooleanField): Whether the user account is active. Defaults to True.
+        date_joined (DateTimeField): Timestamp when the user account was created.
+        last_login (DateTimeField): Timestamp of the user's last login (nullable).
+        profile_picture (URLField): Optional URL to user's profile picture.
+        bio (TextField): Optional biography/description of the user.
+    
+    Methods:
+        __str__(): Returns the username as string representation.
+        get_full_name(): Returns the user's full name (first + last name).
+        get_short_name(): Returns the user's first name.
+    """
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField(unique=True, validators=[EmailValidator()])
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+    last_login = models.DateTimeField(null=True, blank=True)
+    profile_picture = models.URLField(max_length=500, blank=True, null=True)
+    bio = models.TextField(blank=True)
+
+    class Meta:
+        db_table = 'todo_user'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+        ordering = ['-date_joined']
+
+    def __str__(self):
+        """Return the username as string representation."""
+        return self.username
+
+    def get_full_name(self):
+        """Return the user's full name."""
+        return f"{self.first_name} {self.last_name}".strip()
+
+    def get_short_name(self):
+        """Return the user's first name."""
+        return self.first_name
 
 
 class Todo(models.Model):
