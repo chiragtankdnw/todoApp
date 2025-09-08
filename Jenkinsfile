@@ -12,31 +12,37 @@ pipeline {
             }
         }
 
-        stage('Setup Python Environment') {
+        stage('Setup Python Environment - Django') {
             steps {
-                sh '''
-                python3 -m venv $VENV_DIR
-                . $VENV_DIR/bin/activate
+                bat '''
+                python -m venv %VENV_DIR%
+                call %VENV_DIR%\\Scripts\\activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
+                python manage.py migrate
                 '''
             }
         }
 
-        stage('Run Unit Tests') {
+        stage('Frontend Setup - React') {
             steps {
-                sh '''
-                . $VENV_DIR/bin/activate
-                python manage.py test
-                '''
+                dir('frontend') {
+                    bat '''
+                    npm install
+                    npm run build
+                    '''
+                }
             }
         }
-    }
 
-    post {
-        always {
-            // Corrected syntax
-            junit(testResults: '**/TEST-*.xml', allowEmptyResults: true)
+        stage('Deploy') {
+            steps {
+                bat '''
+                call %VENV_DIR%\\Scripts\\activate
+                taskkill /F /IM python.exe || echo "No python process"
+                start /B python manage.py runserver 0.0.0.0:8000
+                '''
+            }
         }
     }
 }
