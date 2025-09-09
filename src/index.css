@@ -14,29 +14,53 @@ code {
 
 /* Theme Variables */
 :root {
-	--color-bg: #ffffff;
-	--color-bg-alt: #f5f7fa;
-	--color-text: #1a1d21;
-	--color-border: #d0d7de;
-	--color-accent: #0d6efd;
-	--color-danger: #dc3545;
-	--color-card-bg: #ffffff;
-	--color-tab-active-bg: #0d6efd;
-	--color-tab-active-text: #ffffff;
-	--color-tab-border: #0d6efd;
+	/* Light Theme Colors */
+	--color-bg: #ffffff;                    /* RGB: 255, 255, 255 */
+	--color-bg-alt: #f8fafc;               /* RGB: 248, 250, 252 */
+	--color-text: #1e293b;                 /* RGB: 30, 41, 59 */
+	--color-text-secondary: #64748b;       /* RGB: 100, 116, 139 */
+	--color-border: #e2e8f0;               /* RGB: 226, 232, 240 */
+	--color-accent: #3b82f6;               /* RGB: 59, 130, 246 */
+	--color-accent-hover: #2563eb;         /* RGB: 37, 99, 235 */
+	--color-success: #10b981;              /* RGB: 16, 185, 129 */
+	--color-danger: #ef4444;               /* RGB: 239, 68, 68 */
+	--color-warning: #f59e0b;              /* RGB: 245, 158, 11 */
+	--color-card-bg: #ffffff;              /* RGB: 255, 255, 255 */
+	--color-tab-active-bg: #3b82f6;        /* RGB: 59, 130, 246 */
+	--color-tab-active-text: #ffffff;      /* RGB: 255, 255, 255 */
+	--color-tab-border: #3b82f6;           /* RGB: 59, 130, 246 */
+	--color-input-bg: #ffffff;             /* RGB: 255, 255, 255 */
+	--color-placeholder: #94a3b8;          /* RGB: 148, 163, 184 */
+	
+	/* Shadows */
+	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 body.theme-dark {
-	--color-bg: #0f1115;
-	--color-bg-alt: #161a20;
-	--color-text: #e6e9ed;
-	--color-border: #2a313b;
-	--color-accent: #4dabf7;
-	--color-danger: #f87171;
-	--color-card-bg: #1b2026;
-	--color-tab-active-bg: #4dabf7;
-	--color-tab-active-text: #0f1115;
-	--color-tab-border: #4dabf7;
+	/* Dark Theme Colors */
+	--color-bg: #0f172a;                    /* RGB: 15, 23, 42 */
+	--color-bg-alt: #1e293b;               /* RGB: 30, 41, 59 */
+	--color-text: #f1f5f9;                 /* RGB: 241, 245, 249 */
+	--color-text-secondary: #94a3b8;       /* RGB: 148, 163, 184 */
+	--color-border: #334155;               /* RGB: 51, 65, 85 */
+	--color-accent: #60a5fa;               /* RGB: 96, 165, 250 */
+	--color-accent-hover: #3b82f6;         /* RGB: 59, 130, 246 */
+	--color-success: #34d399;              /* RGB: 52, 211, 153 */
+	--color-danger: #f87171;               /* RGB: 248, 113, 113 */
+	--color-warning: #fbbf24;              /* RGB: 251, 191, 36 */
+	--color-card-bg: #1e293b;              /* RGB: 30, 41, 59 */
+	--color-tab-active-bg: #60a5fa;        /* RGB: 96, 165, 250 */
+	--color-tab-active-text: #0f172a;      /* RGB: 15, 23, 42 */
+	--color-tab-border: #60a5fa;           /* RGB: 96, 165, 250 */
+	--color-input-bg: #334155;             /* RGB: 51, 65, 85 */
+	--color-placeholder: #64748b;          /* RGB: 100, 116, 139 */
+	
+	/* Dark mode shadows */
+	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
 }
 
 /* Light theme uses default :root variables */
@@ -62,43 +86,192 @@ body {
 }
 
 .tab-list>span {
-	padding: 5px 8px;
-	border: 1px solid var(--color-tab-border);
-	border-radius: 10px;
-	margin-right: 5px;
+	padding: 8px 16px;
+	border: 2px solid var(--color-tab-border);
+	border-radius: 12px;
+	margin-right: 8px;
 	cursor: pointer;
-	transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+	transition: all 0.25s ease;
 	user-select: none;
+	font-weight: 500;
+	color: var(--color-accent);
+	background: transparent;
+}
+
+.tab-list>span:hover {
+	background-color: var(--color-bg-alt);
+	transform: translateY(-1px);
 }
 
 .tab-list>span.active {
 	background-color: var(--color-tab-active-bg);
 	color: var(--color-tab-active-text);
+	transform: translateY(-1px);
+	box-shadow: var(--shadow-sm);
+}
+
+.tab-list>span:focus {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
 }
 
 .card {
 	background: var(--color-card-bg);
 	border: 1px solid var(--color-border);
-	transition: background-color 0.3s ease, border-color 0.3s ease;
+	border-radius: 12px;
+	box-shadow: var(--shadow-md);
+	transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .list-group-item {
 	background: var(--color-card-bg);
 	color: var(--color-text);
 	border-color: var(--color-border);
-	transition: background-color 0.25s ease, color 0.25s ease;
+	transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.list-group-item:hover {
+	background: var(--color-bg-alt);
 }
 
 .btn-primary {
 	background-color: var(--color-accent);
 	border-color: var(--color-accent);
+	transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
 }
 
-body.theme-dark .btn-outline-secondary {
-	color: var(--color-tab-active-text);
+.btn-primary:hover {
+	background-color: var(--color-accent-hover);
+	border-color: var(--color-accent-hover);
+	transform: translateY(-1px);
+}
+
+.btn-primary:focus {
+	box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+/* Enhanced focus states for accessibility */
+.btn:focus,
+.tab-list > span:focus {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+/* Improved button styling */
+.btn {
+	border-radius: 8px;
+	font-weight: 500;
+	transition: all 0.25s ease;
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+	box-shadow: var(--shadow-sm);
+}
+
+/* Button Styles */
+.btn-outline-secondary {
+	color: var(--color-text);
+	border-color: var(--color-border);
+	transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.btn-outline-secondary:hover {
+	background: var(--color-border);
+	color: var(--color-text);
 	border-color: var(--color-border);
 }
 
-body.theme-dark .btn-outline-secondary:hover {
-	background: var(--color-border);
+.btn-outline-secondary:focus {
+	box-shadow: 0 0 0 0.2rem rgba(77, 171, 247, 0.25);
+}
+
+/* Modal Styles for Dark Mode */
+body.theme-dark .modal-content {
+	background-color: var(--color-card-bg);
+	border-color: var(--color-border);
+	color: var(--color-text);
+}
+
+body.theme-dark .modal-header {
+	border-color: var(--color-border);
+}
+
+body.theme-dark .modal-footer {
+	border-color: var(--color-border);
+}
+
+body.theme-dark .modal-header .close {
+	color: var(--color-text);
+	opacity: 0.8;
+}
+
+body.theme-dark .modal-header .close:hover {
+	color: var(--color-text);
+	opacity: 1;
+}
+
+/* Form Controls */
+.form-control {
+	background-color: var(--color-input-bg);
+	border: 2px solid var(--color-border);
+	border-radius: 8px;
+	color: var(--color-text);
+	transition: all 0.25s ease;
+}
+
+.form-control:focus {
+	background-color: var(--color-input-bg);
+	border-color: var(--color-accent);
+	color: var(--color-text);
+	box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.15);
+}
+
+.form-control::placeholder {
+	color: var(--color-placeholder);
+	opacity: 1;
+}
+
+body.theme-dark .form-control {
+	background-color: var(--color-input-bg);
+	border-color: var(--color-border);
+	color: var(--color-text);
+}
+
+body.theme-dark .form-control:focus {
+	background-color: var(--color-input-bg);
+	border-color: var(--color-accent);
+	color: var(--color-text);
+	box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25);
+}
+
+body.theme-dark .form-control::placeholder {
+	color: var(--color-placeholder);
+}
+
+/* Button variants for dark mode */
+body.theme-dark .btn-success {
+	background-color: #10b981;
+	border-color: #10b981;
+}
+
+body.theme-dark .btn-success:hover {
+	background-color: #059669;
+	border-color: #059669;
+}
+
+body.theme-dark .btn-danger {
+	background-color: var(--color-danger);
+	border-color: var(--color-danger);
+}
+
+body.theme-dark .btn-secondary {
+	background-color: #6b7280;
+	border-color: #6b7280;
+	color: #ffffff;
+}
+
+body.theme-dark .btn-secondary:hover {
+	background-color: #4b5563;
+	border-color: #4b5563;
 }
