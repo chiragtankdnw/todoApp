@@ -4,7 +4,7 @@
 # We will create a todo/serializers.py file:
 
 from rest_framework import serializers
-from .models import Todo, CustomUser
+from .models import Todo, CustomUser, BlogPostSummary
 
 #  Specify the model to work with and the fields we want to be converted to JSON.
 class TodoSerializer(serializers.ModelSerializer):
@@ -118,3 +118,28 @@ class UserListSerializer(serializers.ModelSerializer):
     def get_full_name(self, obj):
         """Return the user's full name."""
         return obj.get_full_name()
+
+
+class BlogPostSummarySerializer(serializers.ModelSerializer):
+    """
+    Serializer for BlogPostSummary model.
+    
+    Handles serialization and deserialization of BlogPostSummary instances for API endpoints.
+    """
+    
+    class Meta:
+        model = BlogPostSummary
+        fields = (
+            'id', 'title', 'url', 'date_published', 'summary', 'tags', 
+            'location_timezone', 'created_at', 'updated_at'
+        )
+        extra_kwargs = {
+            'created_at': {'read_only': True},
+            'updated_at': {'read_only': True},
+        }
+    
+    def validate_url(self, value):
+        """Validate URL format."""
+        if not value.startswith(('http://', 'https://')):
+            raise serializers.ValidationError("URL must start with http:// or https://")
+        return value

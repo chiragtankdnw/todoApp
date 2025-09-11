@@ -75,3 +75,37 @@ class Todo(models.Model):
             'Buy groceries'
         """
         return self.title
+
+
+class BlogPostSummary(models.Model):
+    """
+    Model for storing blog post summaries and metadata.
+    
+    Attributes:
+        title (CharField): Title of the blog post. Maximum 300 characters.
+        url (URLField): Source URL of the blog post.
+        date_published (DateField): Publication date of the blog post.
+        summary (TextField): High-level technical summary of the blog post.
+        tags (CharField): Comma-separated tags for categorization.
+        location_timezone (CharField): Timezone information for the post.
+        created_at (DateTimeField): Timestamp when summary was added.
+        updated_at (DateTimeField): Timestamp when summary was last updated.
+    """
+    title = models.CharField(max_length=300)
+    url = models.URLField(max_length=500)
+    date_published = models.DateField()
+    summary = models.TextField()
+    tags = models.CharField(max_length=200, blank=True, null=True)
+    location_timezone = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'todo_blogpostsummary'
+        verbose_name = 'Blog Post Summary'
+        verbose_name_plural = 'Blog Post Summaries'
+        ordering = ['-date_published', '-created_at']
+
+    def __str__(self):
+        """Return the title as string representation."""
+        return self.title
