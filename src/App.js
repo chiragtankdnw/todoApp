@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
+import BlogSummaries from "./components/BlogSummaries";
 import axios from "axios";
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -178,6 +179,7 @@ class App extends Component {
 								{this.renderItems()}
 							</ul>
 						</div>
+						<BlogSummaries />
 					</div>
 				</div>
 				{this.state.modal ? (

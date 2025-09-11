@@ -22,6 +22,7 @@ from todo import views
 router = routers.DefaultRouter()
 router.register(r'todos', views.TodoView, 'todo')
 router.register(r'users', views.UserController, 'user')
+router.register(r'blog-summaries', views.BlogPostSummaryView, 'blog-summary')
 
 urlpatterns = [
     path('admin/', admin.site.urls),         

@@ -3,8 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.core.exceptions import ValidationError
-from .serializers import TodoSerializer, UserSerializer, UserListSerializer
-from .models import Todo, CustomUser
+from .serializers import TodoSerializer, UserSerializer, UserListSerializer, BlogPostSummarySerializer
+from .models import Todo, CustomUser, BlogPostSummary
 from .services import UserService
 from django.views import View
 from django.http import HttpResponse, HttpResponseNotFound
@@ -25,6 +25,32 @@ USER_DEACTIVATED_SUCCESS = 'User deactivated successfully'
 class TodoView(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()
+
+
+class BlogPostSummaryView(viewsets.ModelViewSet):
+    """
+    API ViewSet for BlogPostSummary management with full CRUD operations.
+    
+    This viewset provides complete REST API endpoints for BlogPostSummary entities:
+    - GET /api/blog-summaries/ - List all blog post summaries
+    - POST /api/blog-summaries/ - Create a new blog post summary
+    - GET /api/blog-summaries/{id}/ - Retrieve a specific summary
+    - PUT /api/blog-summaries/{id}/ - Update a specific summary (full update)
+    - PATCH /api/blog-summaries/{id}/ - Partially update a specific summary
+    - DELETE /api/blog-summaries/{id}/ - Delete a specific summary
+    """
+    serializer_class = BlogPostSummarySerializer
+    queryset = BlogPostSummary.objects.all()
+
+    def get_queryset(self):
+        """
+        Optionally filter summaries by tags or date range.
+        """
+        queryset = BlogPostSummary.objects.all()
+        tags = self.request.query_params.get('tags', None)
+        if tags:
+            queryset = queryset.filter(tags__icontains=tags)
+        return queryset
 
 
 class UserController(viewsets.ModelViewSet):
